@@ -43,6 +43,17 @@ func Chk(err error, msgs ...string) {
 		fmt.Println("----------------------")
 	}
 }
+func errMsg(e error, msgs ...string) error {
+	if e != nil {
+		errs := []string{e.Error()}
+		for _, msg := range msgs {
+			errs = append(errs, msg)
+		}
+		return errors.New(strings.Join(errs, "\n"))
+	}
+	return nil
+}
+
 func HumanSize(b int64) string {
 	const unit = 1000
 	if b < unit {
