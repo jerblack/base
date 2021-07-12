@@ -43,6 +43,7 @@ func Chk(err error, msgs ...string) {
 		fmt.Println("----------------------")
 	}
 }
+
 func ErrMsg(e error, msgs ...string) error {
 	if e != nil {
 		errs := []string{e.Error()}
