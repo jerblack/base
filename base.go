@@ -23,15 +23,21 @@ func P(s string, i ...interface{}) {
 	notice := fmt.Sprintf("%s | %s", t, fmt.Sprintf(s, i...))
 	fmt.Println(notice)
 }
-func ChkFatal(err error) {
+func ChkFatal(err error, msgs ...string) {
 	if err != nil {
+		for _, msg := range msgs {
+			fmt.Println(msg)
+		}
 		fmt.Println("----------------------")
 		defer fmt.Println("----------------------")
 		panic(err)
 	}
 }
-func Chk(err error) {
+func Chk(err error, msgs ...string) {
 	if err != nil {
+		for _, msg := range msgs {
+			fmt.Println(msg)
+		}
 		fmt.Println("----------------------")
 		fmt.Println(err)
 		fmt.Println("----------------------")
