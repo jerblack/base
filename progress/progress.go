@@ -30,6 +30,7 @@ func MvFile(src, dst string) error {
 	}
 	var bar *progressbar.ProgressBar
 	if st.Mode().IsRegular() {
+		log.Println("is regular")
 		bar = progressbar.NewOptions64(st.Size(),
 			progressbar.OptionSetWriter(mwNoFile),
 			progressbar.OptionSpinnerType(14),
@@ -50,6 +51,7 @@ func MvFile(src, dst string) error {
 			}))
 		bar.RenderBlank()
 	} else {
+		log.Println("is not regular")
 		bar = nil
 	}
 
@@ -62,10 +64,8 @@ func MvFile(src, dst string) error {
 		return e
 	}
 	defer out.Close()
-	log.Println(in)
-	log.Println(out)
 	log.Println(bar)
-	log.Println(st)
+	log.Println(bar == nil)
 	log.Println(st.Mode())
 	log.Println(st.Mode().IsRegular())
 	log.Println(st.Mode().Type())
