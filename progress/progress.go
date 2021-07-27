@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/schollz/progressbar/v3"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,6 +49,8 @@ func MvFile(src, dst string) error {
 				SaucerPadding: "[_blue_] [reset]",
 			}))
 		bar.RenderBlank()
+	} else {
+		bar = nil
 	}
 
 	in, e := os.Open(src)
@@ -59,6 +62,14 @@ func MvFile(src, dst string) error {
 		return e
 	}
 	defer out.Close()
+	log.Println(in)
+	log.Println(out)
+	log.Println(bar)
+	log.Println(st)
+	log.Println(st.Mode())
+	log.Println(st.Mode().IsRegular())
+	log.Println(st.Mode().Type())
+
 	if bar != nil {
 		_, e = io.Copy(io.MultiWriter(out, bar), in)
 	} else {
