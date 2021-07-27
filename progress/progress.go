@@ -2,7 +2,7 @@ package progress
 
 import (
 	"fmt"
-	"github.com/schollz/progressbar"
+	"github.com/schollz/progressbar/v3"
 	"io"
 	"os"
 	"path/filepath"
