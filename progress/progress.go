@@ -24,25 +24,28 @@ func MvFile(src, dst string) error {
 		return e
 	}
 	st, _ := os.Stat(src)
-	bar := progressbar.NewOptions64(st.Size(),
-		progressbar.OptionSetWriter(mwNoFile),
-		progressbar.OptionSpinnerType(14),
-		progressbar.OptionSetDescription(fmt.Sprintf("[bold][light_magenta] %s  [reset]", filepath.Base(dst))),
-		progressbar.OptionShowBytes(true),
-		progressbar.OptionSetPredictTime(false),
-		progressbar.OptionShowCount(),
-		progressbar.OptionClearOnFinish(),
-		progressbar.OptionSetWidth(60),
-		progressbar.OptionOnCompletion(func() {}),
-		progressbar.OptionEnableColorCodes(true),
-		progressbar.OptionThrottle(100*time.Millisecond),
-		progressbar.OptionUseANSICodes(true),
-		progressbar.OptionSetTheme(progressbar.Theme{
-			Saucer:        "[magenta]█[reset]",
-			SaucerHead:    "[light_magenta]█[reset]",
-			SaucerPadding: "[_blue_] [reset]",
-		}))
-	bar.RenderBlank()
+	var bar *progressbar.ProgressBar
+	if st.Mode().IsRegular() {
+		bar = progressbar.NewOptions64(st.Size(),
+			progressbar.OptionSetWriter(mwNoFile),
+			progressbar.OptionSpinnerType(14),
+			progressbar.OptionSetDescription(fmt.Sprintf("[bold][light_magenta] %s  [reset]", filepath.Base(dst))),
+			progressbar.OptionShowBytes(true),
+			progressbar.OptionSetPredictTime(false),
+			progressbar.OptionShowCount(),
+			progressbar.OptionClearOnFinish(),
+			progressbar.OptionSetWidth(60),
+			progressbar.OptionOnCompletion(func() {}),
+			progressbar.OptionEnableColorCodes(true),
+			progressbar.OptionThrottle(100*time.Millisecond),
+			progressbar.OptionUseANSICodes(true),
+			progressbar.OptionSetTheme(progressbar.Theme{
+				Saucer:        "[magenta]█[reset]",
+				SaucerHead:    "[light_magenta]█[reset]",
+				SaucerPadding: "[_blue_] [reset]",
+			}))
+		bar.RenderBlank()
+	}
 
 	in, e := os.Open(src)
 	if e != nil {
@@ -53,7 +56,11 @@ func MvFile(src, dst string) error {
 		return e
 	}
 	defer out.Close()
-	_, e = io.Copy(io.MultiWriter(out, bar), in)
+	if bar != nil {
+		_, e = io.Copy(io.MultiWriter(out, bar), in)
+	} else {
+		_, e = io.Copy(out, in)
+	}
 	if e != nil {
 		return e
 	}
@@ -73,6 +80,11 @@ func MvFile(src, dst string) error {
 	if e != nil {
 		return e
 	}
-	bar.Clear()
+	if bar != nil {
+		e = bar.Clear()
+		if e != nil {
+			return e
+		}
+	}
 	return nil
 }
