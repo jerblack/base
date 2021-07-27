@@ -50,6 +50,7 @@ func MvFile(src, dst string) error {
 				SaucerPadding: "[_blue_] [reset]",
 			}))
 		bar.RenderBlank()
+		log.Println(&bar)
 	} else {
 		log.Println("is not regular")
 		bar = nil
@@ -71,6 +72,8 @@ func MvFile(src, dst string) error {
 	log.Println(st.Mode().Type())
 
 	if bar != nil {
+		log.Println(&bar)
+		log.Println(bar.IsFinished())
 		_, e = io.Copy(io.MultiWriter(out, bar), in)
 	} else {
 		_, e = io.Copy(out, in)
