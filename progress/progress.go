@@ -23,7 +23,10 @@ func MvFile(src, dst string) error {
 	if !strings.Contains(e.Error(), "invalid cross-device link") {
 		return e
 	}
-	st, _ := os.Stat(src)
+	st, e := os.Stat(src)
+	if e != nil {
+		return e
+	}
 	var bar *progressbar.ProgressBar
 	if st.Mode().IsRegular() {
 		bar = progressbar.NewOptions64(st.Size(),
