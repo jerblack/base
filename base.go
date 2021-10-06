@@ -212,6 +212,50 @@ func RenFile(src, dst string) error {
 	}
 	return os.Rename(src, dst)
 }
+func MvFile(src, dst string) error {
+	e := os.MkdirAll(filepath.Dir(dst), 0755)
+	if e != nil {
+		return e
+	}
+	e = os.Rename(src, dst)
+	if e == nil {
+		return nil
+	}
+	if !strings.Contains(e.Error(), "invalid cross-device link") {
+		return e
+	}
+	st, _ := os.Stat(src)
+	in, e := os.Open(src)
+	if e != nil {
+		return e
+	}
+	out, e := os.Create(dst)
+	if e != nil {
+		return e
+	}
+	defer out.Close()
+	_, e = io.Copy(out, in)
+	if e != nil {
+		return e
+	}
+	e = in.Close()
+	if e != nil {
+		return e
+	}
+	e = out.Sync()
+	if e != nil {
+		return e
+	}
+	e = os.Chmod(dst, st.Mode())
+	if e != nil {
+		return e
+	}
+	e = os.Remove(src)
+	if e != nil {
+		return e
+	}
+	return nil
+}
 
 func MvTree(src, dst string, removeEmpties bool) {
 	P("moving tree %s To %s", src, dst)
