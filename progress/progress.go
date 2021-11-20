@@ -81,10 +81,10 @@ func MvFile(src, dst string) error {
 	if e != nil {
 		return e
 	}
-	e = out.Sync()
-	if e != nil {
-		return e
-	}
+	//e = out.Sync()
+	//if e != nil {
+	//	return e
+	//}
 	e = os.Chmod(dst, st.Mode())
 	if e != nil {
 		return e
