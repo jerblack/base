@@ -1,3 +1,3 @@
 module github.com/jerblack/base
 
-go 1.16
+go 1.17
