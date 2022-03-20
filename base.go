@@ -77,7 +77,17 @@ func ArrayIdx(slice []string, val string) int {
 	}
 	return -1
 }
-func IsAny(a string, b ...string) bool {
+
+func IsAny[T comparable](a T, b ...T) bool {
+	for _, _b := range b {
+		if a == _b {
+			return true
+		}
+	}
+	return false
+}
+
+func IsAnyStr(a string, b ...string) bool {
 	for _, _b := range b {
 		if a == _b {
 			return true
