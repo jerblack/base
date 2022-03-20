@@ -436,12 +436,15 @@ func DnsQuery(host string) []string {
 	return ips
 }
 
-func PStr(s string) *string {
-	return &s
-}
-func PInt(n int) *int {
-	return &n
-}
-func PBool(b bool) *bool {
-	return &b
+//func PStr(s string) *string {
+//	return &s
+//}
+//func PInt(n int) *int {
+//	return &n
+//}
+//func PBool(b bool) *bool {
+//	return &b
+//}
+func Ptr[T any](a T) *T {
+	return &a
 }
